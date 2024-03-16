@@ -9,7 +9,14 @@ class FileStorage:
     __objects = {}
 
     def all(self, cls=None):
-        return FileStorage.__objects
+        if cls is None:
+            return self.__objects
+        else:
+            lsOfObj = {}
+            for key, obj in self.__objects.items():
+                if isinstance(obj, cls):
+                    lsOfObj[key] = obj
+            return lsOfObj
 
     def new(self, obj):
         """Adds new object to storage dictionary"""
