@@ -149,13 +149,12 @@ class HBNBCommand(cmd.Cmd):
             print("** instance id missing **")
             return
 
-        # Retrieve the object from storage
-        obj = storage.get(c_name, c_id)
-        if obj:
+        key = c_name + "." + c_id
+        try:
+            obj = storage.all()[key]
             print(obj)
-        else:
+        except KeyError:
             print("** no instance found **")
-            print("[Usage]: create <className>\n")
 
     def help_show(self):
         """ Help information for the show command """
@@ -183,14 +182,16 @@ class HBNBCommand(cmd.Cmd):
             print("** instance id missing **")
             return
 
+        key = c_name + "." + c_id
+
         # Retrieve the object from the storage by the given
         # class name and ID
         try:
-            obj = storage.get(c_name, c_id)
+            obj = storage.all()[key]
             if obj:
-                storage.delete(obj)
+                del storage.all()[key]
                 storage.save()
-                print("Deleted: ", c_name, c_id)
+                print("Deleted: ", key)
             else:
                 print("** no instance found**")
         except Exception as e:
@@ -281,7 +282,7 @@ class HBNBCommand(cmd.Cmd):
             return
 
         # Retrieve the object from storage
-        obj = storage.get(c_name, c_id)
+        obj = storage.all()[key]
 
         # Update the attribute with new value
         setattr(obj, att_name, att_val)
