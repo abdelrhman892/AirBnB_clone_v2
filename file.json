@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 {"State.9198dca9-55a2-445d-b272-750a79081ec8": {"id": "9198dca9-55a2-445d-b272-750a79081ec8", "created_at": "2024-03-16T20:59:42.199605", "updated_at": "2024-03-16T20:59:42.199615", "__class__": "State"}, "BaseModel.1ec5b3b0-56c0-47ac-a199-d2292046e3e6": {"id": "1ec5b3b0-56c0-47ac-a199-d2292046e3e6", "created_at": "2024-03-16T21:11:05.828804", "updated_at": "2024-03-16T21:11:05.828815", "__class__": "BaseModel"}}
+=======
+{"BaseModel.cd1d98f2-1f68-45f2-bfa1-83a5208fc7b8": {"id": "cd1d98f2-1f68-45f2-bfa1-83a5208fc7b8", "created_at": "2024-03-16T06:35:06.415777", "updated_at": "2024-03-16T06:35:06.415856", "name": "My First Model", "my_number": 89, "__class__": "BaseModel"}}
+>>>>>>> af950686969d37ac5a7716c6232e6b94e45a643d
