@@ -1,7 +1,9 @@
 <center> <h1>HBNB - The Console</h1> </center>
 
-This repository contains the initial stage of a student project to build a clone of the AirBnB website. This stage implements a backend interface, or console, to manage program data. Console commands allow the user to create, update, and destroy objects, as well as manage file storage. Using a system of JSON serialization/deserialization, storage is persistent between sessions.
-
+This project is a Command Line Interface (CLI) for managing Airbnb listings.
+    It provides functionalities to interact with Airbnb listings through the command line,
+    enabling users to search for properties, book accommodations,
+    manage reservations, and more
 ---
 
 <center><h3>Repository Contents by Project Task</h3> </center>
@@ -35,35 +37,22 @@ This repository contains the initial stage of a student project to build a clone
 ```
 5. This prompt designates you are in the "HBnB" console. There are a variety of commands available within the console program.
 
-##### Commands
-    * create - Creates an instance based on given class
+## How to Use
+    Once the command interpreter is running,
+    you can use various commands to interact with Airbnb listings.
+    The prompt  will be (hbnb).
+    Here are some of the basic commands:
 
-    * destroy - Destroys an object based on class and UUID
-
-    * show - Shows an object based on class and UUID
-
-    * all - Shows all objects the program has access to, or all objects of a given class
-
-    * update - Updates existing attributes an object based on class name and UUID
-
-    * quit - Exits the program (EOF will as well)
-
-
-##### Alternative Syntax
-Users are able to issue a number of console command using an alternative syntax:
-
-	Usage: <class_name>.<command>([<id>[name_arg value_arg]|[kwargs]])
-Advanced syntax is implemented for the following commands: 
-
-    * all - Shows all objects the program has access to, or all objects of a given class
-
-	* count - Return number of object instances by class
-
-    * show - Shows an object based on class and UUID
-
-	* destroy - Destroys an object based on class and UUID
-
-    * update - Updates existing attributes an object based on class name and UUID
+| Commands      | How to use                                                                                                                                 |
+|---------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| ```quit```    | Quits the console                                                                                                                          |
+| ```Ctrl+D```  | Quits the console `EOF`                                                                                                                    |
+| ```help```    | ```help <command>``` Displays all commands or Displays instructions for a specific command                                                 |
+| ```create```  | ```create <class_name>``` Creates an object of type , saves it to a JSON file, and prints the objects ID                                   |
+| ```show```    | ```show <class_name> <id>``` Shows string representation of an object                                                                      |
+| ```destroy``` | ```destroy <class> <ID>``` Deletes an objects                                                                                              |
+| ```all```     | ```all <class>``` Prints all string representations of all objects or Prints all string representations of all objects of a specific class |
+| ```update```  | ```update <class> <id> <attribute name> "<attribute value>"``` Updates an object with a certain attribute (new or existing)                |
 
 ## examples 
     
