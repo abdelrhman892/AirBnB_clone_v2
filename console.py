@@ -2,6 +2,9 @@
 """ Console Module """
 import cmd
 import sys
+import re
+import os
+import uuid
 from models.base_model import BaseModel
 from models.__init__ import storage
 from models.user import User
@@ -37,52 +40,37 @@ class HBNBCommand(cmd.Cmd):
             print('(hbnb)')
 
     def precmd(self, line):
-        """
-        Usage: <class name>.<command>([<id> [<*args> or <**kwargs>]])
-        (Brackets denote optional fields in usage example.)
-        """
-        _cmd = _cls = _id = _args = ''  # initialize line elements
+        # Parse the command line to extract the class name, command, and arguments.
+        _cmd = _cls = _id = _args = ''
 
-        # scan for general formating - i.e '.', '(', ')'
-        if not ('.' in line and '(' in line and ')' in line):
+        # Split the line into components
+        parts = line.split()
+
+        # Check if the line contains a class name
+        if len(parts) >= 1 and parts[0] in HBNBCommand.dot_cmds:
+            _cmd = parts[0]
+        else:
             return line
 
-        try:  # Parse line left to right
-            pline = line[:]
-
-            # isolate <class name>
-            _cls = pline[:pline.find('.')]
-
-            # isolate and validate <command>
-            _cmd = pline[pline.find('.') + 1:pline.find('(')]
-            if _cmd not in HBNBCommand.dot_cmds:
-                raise Exception
-
-            # if parantheses contain arguments, parse them
-            pline = pline[pline.find('(') + 1:pline.find(')')]
-            if pline:
-                # partition args: (<id>, [<delim>], [<*args>])
-                pline = pline.partition(', ')  # pline convert to tuple
-                # isolate _id, stripping quotes
-                _id = pline[0].replace('\"', '')
-                # possible bug here:
-                # empty quotes register as empty _id when replaced
-
-                # if arguments exist beyond _id
-                pline = pline[2].strip()  # pline is now str
-                if pline:
-                    # check for *args or **kwargs
-                    if pline[0] == '{' and pline[-1] == '}'\
-                            and type(eval(pline)) == dict:
-                        _args = pline
-                    else:
-                        _args = pline.replace(',', '')
-                        # _args = _args.replace('\"', '')
-            line = ' '.join([_cmd, _cls, _id, _args])
-        except Exception as mess:
-            pass
-        finally:
+        # Check if the line contains a command
+        if len(parts) >= 2:
+            _cls = parts[1]
+        else:
+            print("** class name missing **")
             return line
+
+        if _cls not in HBNBCommand.classes:
+            print("** class doesn't exist **")
+            return line
+
+        # Check if the line contains an object ID
+        if len(parts) >= 3:
+            _args = ' '.join(parts[2:])
+
+        # Construct the modified line with correct components
+        line = '{} {} {}'.format(_cmd, _cls, _args)
+
+        return line
 
     def postcmd(self, stop, line):
         """Prints if isatty is false"""
@@ -113,76 +101,62 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, args):
         """ Create an object of any class"""
-        if not args:
+        ignored_attrs = ('id', 'created_at', 'updated_at', '__class__')
+        class_name = ''
+        name_pattern = r'(?P<name>(?:[a-zA-Z]|_)(?:[a-zA-Z]|\d|_)*)'
+        class_match = re.match(name_pattern, args)
+        obj_kwargs = {}
+        if class_match is not None:
+            class_name = class_match.group('name')
+            params_str = args[len(class_name):].strip()
+            params = params_str.split(' ')
+            str_pattern = r'(?P<t_str>"([^"]|\")*")'
+            float_pattern = r'(?P<t_float>[-+]?\d+\.\d+)'
+            int_pattern = r'(?P<t_int>[-+]?\d+)'
+            param_pattern = '{}=({}|{}|{})'.format(
+                    name_pattern,
+                    str_pattern,
+                    float_pattern,
+                    int_pattern
+                    )
+            for param in params:
+                param_match = re.fullmatch(param_pattern, param)
+                if param_match is not None:
+                    key_name = param_match.group('name')
+                    str_v = param_match.group('t_str')
+                    float_v = param_match.group('t_float')
+                    int_v = param_match.group('t_int')
+                    if float_v is not None:
+                        obj_kwargs[key_name] = float(float_v)
+                    elif int_v is not None:
+                        obj_kwargs[key_name] = int(int_v)
+                    elif str_v is not None:
+                        obj_kwargs[key_name] = str_v[1:-1].replace('_', ' ')
+        else:
+            class_name = args
+        if not class_name:
             print("** class name missing **")
             return
-
-        # Define current_time
-        current_time = datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%f')
-
-        # Split the arguments into class name and parameters
-        args_list = args.split()
-        class_name = args_list[0]
-
-        # Check if the class exists
-        if class_name not in HBNBCommand.classes:
+        elif class_name not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-
-        # check if the class exists
-        if class_name not in HBNBCommand.classes:
-            print("** class doesn't exist **")
-            return
-
-        # Initialize an empty dictionary to store parameters
-        params = {}
-
-        # Check if parameters are provided
-        if len(args_list) > 1:
-            # Iterate through remaining arguments
-            for arg in args_list[1:]:
-                # Split each arguments
-                key, value = arg.split('=')
-
-                #Process the value according to its syntax
-                if value.startswith('"') and value.endswith('"'):
-                    #String value
-                    value = value[1:-1]  # Remove quotes
-                    value = value.replace('_',' ')  # Replace underscores with spaces
-                    value = value.replace('\\"','"')  # Unescape double quotes
-                elif '.' in value:
-                    # Float value
-                    try:
-                        value = float(value)
-                    except ValueError:
-                        # Skip this parameter if it can't be converted to float
-                        continue
-                else:
-                    # Integer Value
-                    try:
-                        value = int(value)
-                    except ValueError:
-                        # Skip this parameter if it can't be converted to integer
-                        continue
-
-                # Add the parameter to the dictionary
-                params[key] = value
-
-        # Set the updates_at attribute to current datetime
-        if 'updated_at' not in params:
-            params['updated_at'] = datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%f')
-            if 'created_at' not in params:
-                params['created_at'] = current_time
-            if 'updated_at' not in params:
-                params['updated_at'] = current_time
-        
-        # Create an instance of te specified class with the extracted parameters
-        try:
-             new_instance = HBNBCommand.classes[class_name](**params)
-             new_instance.save()
-             print(new_instance.id)
-        except Exception as e:
-             print("** Error creating instance: {} **".format(e))
+        if os.getenv('HBNB_TYPE_STORAGE') == 'db':
+            if 'id' not in obj_kwargs:
+                obj_kwargs['id'] = str(uuid.uuid4())
+            if 'created_at' not in obj_kwargs:
+                obj_kwargs['created_at'] = str(datetime.now())
+            if 'updated_at' not in obj_kwargs:
+                obj_kwargs['updated_at'] = str(datetime.now())
+            new_instance = HBNBCommand.classes[class_name](**obj_kwargs)
+            new_instance.save()
+            print(new_instance.id)
+        else:
+            new_instance = HBNBCommand.classes[class_name]()
+            for key, value in obj_kwargs.items():
+                if key not in ignored_attrs:
+                    setattr(new_instance, key, value)
+            new_instance.save()
+            print(new_instance.id)
 
     def help_create(self):
         """ Help information for the create method """
