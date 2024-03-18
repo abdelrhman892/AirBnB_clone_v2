@@ -4,7 +4,6 @@ This project is a Command Line Interface (CLI) for managing Airbnb listings.
     It provides functionalities to interact with Airbnb listings through the command line,
     enabling users to search for properties, book accommodations,
     manage reservations, and more
----
 
 <center><h3>Repository Contents by Project Task</h3> </center>
 
