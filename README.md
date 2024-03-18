@@ -98,4 +98,8 @@ EOF  all  create  destroy  help  quit  show  update
 (hbnb) quit {you closed the project}
 (hbnh) EOF {you closed the project}
 ```
+```
+(hbnb) count BaseModel
+(hbnh) 1
+```
 
