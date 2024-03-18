@@ -95,11 +95,10 @@ EOF  all  create  destroy  help  quit  show  update
 ** no instance found **
 ```
 ```
-(hbnb) quit {you closed the project}
-(hbnh) EOF {you closed the project}
-```
-```
 (hbnb) count BaseModel
 (hbnh) 1
 ```
-
+```
+(hbnb) quit {you closed the project}
+(hbnh) EOF {you closed the project}
+```
