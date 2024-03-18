@@ -10,6 +10,7 @@ from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.review import Review
+from datetime import datetime
 
 
 class HBNBCommand(cmd.Cmd):
@@ -116,6 +117,9 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
             return
 
+        # Define current_time
+        current_time = datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%f')
+
         # Split the arguments into class name and parameters
         args_list = args.split()
         class_name = args_list[0]
@@ -158,14 +162,22 @@ class HBNBCommand(cmd.Cmd):
 
                 # Add the parameter to the dictionary
                 params[key] = value
+
+        # Set the updates_at attribute to current datetime
+        if 'updated_at' not in params:
+            params['updated_at'] = datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%f')
+            if 'created_at' not in params:
+                params['created_at'] = current_time
+            if 'updated_at' not in params:
+                params['updated_at'] = current_time
         
         # Create an instance of te specified class with the extracted parameters
-        new_instance = HBNBCommand.classes[class_name](**params)
-
-        # Save the new instance to the storage
-        storage.save()
-
-        print(new_instance.id)
+        try:
+             new_instance = HBNBCommand.classes[class_name](**params)
+             new_instance.save()
+             print(new_instance.id)
+        except Exception as e:
+             print("** Error creating instance: {} **".format(e))
 
     def help_create(self):
         """ Help information for the create method """
@@ -248,20 +260,20 @@ class HBNBCommand(cmd.Cmd):
 
     def do_all(self, args):
         """ Shows all objects, or all objects of a class"""
-        # Done all
-        print_list = []
-
+        # Done with some more fixing
+        
         if args:
             class_name = args.split()[0]  # Extract class name from args
+
             if class_name not in HBNBCommand.classes:
                 print("** class doesn't exist **")
                 return
 
-            # Retrieve objects of the specified class
-            objects = storage.all().values()
-            print_list = [str(obj) for obj in objects if obj.__class__.__name__ == class_name]
+            # Retrieve objects of specified class
+            objects = storage.all(class_name).values()
+            print_list = [str(obj) for obj in objects]
         else:
-            # Retrieve all objects
+            # Retrieve all objects from database
             objects = storage.all().values()
             print_list = [str(obj) for obj in objects]
 
