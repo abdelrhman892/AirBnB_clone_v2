@@ -1,8 +1,9 @@
 <center> <h1>HBNB - The Console</h1> </center>
 
-This repository contains the initial stage of a student project to build a clone of the AirBnB website. This stage implements a backend interface, or console, to manage program data. Console commands allow the user to create, update, and destroy objects, as well as manage file storage. Using a system of JSON serialization/deserialization, storage is persistent between sessions.
-
----
+This project is a Command Line Interface (CLI) for managing Airbnb listings.
+    It provides functionalities to interact with Airbnb listings through the command line,
+    enabling users to search for properties, book accommodations,
+    manage reservations, and more
 
 <center><h3>Repository Contents by Project Task</h3> </center>
 
@@ -35,108 +36,69 @@ This repository contains the initial stage of a student project to build a clone
 ```
 5. This prompt designates you are in the "HBnB" console. There are a variety of commands available within the console program.
 
-##### Commands
-    * create - Creates an instance based on given class
+## How to Use
+    Once the command interpreter is running,
+    you can use various commands to interact with Airbnb listings.
+    The prompt  will be (hbnb).
+    Here are some of the basic commands:
 
-    * destroy - Destroys an object based on class and UUID
+| Commands      | How to use                                                                                                                                 |
+|---------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| ```quit```    | Quits the console                                                                                                                          |
+| ```Ctrl+D```  | Quits the console `EOF`                                                                                                                    |
+| ```help```    | ```help <command>``` Displays all commands or Displays instructions for a specific command                                                 |
+| ```create```  | ```create <class_name>``` Creates an object of type , saves it to a JSON file, and prints the objects ID                                   |
+| ```show```    | ```show <class_name> <id>``` Shows string representation of an object                                                                      |
+| ```destroy``` | ```destroy <class> <ID>``` Deletes an objects                                                                                              |
+| ```all```     | ```all <class>``` Prints all string representations of all objects or Prints all string representations of all objects of a specific class |
+| ```update```  | ```update <class> <id> <attribute name> "<attribute value>"``` Updates an object with a certain attribute (new or existing)                |
+| ```count```   | ```count <class_name>``` Return number of object instances by class
 
-    * show - Shows an object based on class and UUID
+## examples 
+    
+```
+(hbnb) help
 
-    * all - Shows all objects the program has access to, or all objects of a given class
-
-    * update - Updates existing attributes an object based on class name and UUID
-
-    * quit - Exits the program (EOF will as well)
-
-
-##### Alternative Syntax
-Users are able to issue a number of console command using an alternative syntax:
-
-	Usage: <class_name>.<command>([<id>[name_arg value_arg]|[kwargs]])
-Advanced syntax is implemented for the following commands: 
-
-    * all - Shows all objects the program has access to, or all objects of a given class
-
-	* count - Return number of object instances by class
-
-    * show - Shows an object based on class and UUID
-
-	* destroy - Destroys an object based on class and UUID
-
-    * update - Updates existing attributes an object based on class name and UUID
-
-<br>
-<br>
-<center> <h2>Examples</h2> </center>
-<h3>Primary Command Syntax</h3>
-
-###### Example 0: Create an object
-Usage: create <class_name>
+Documented commands (type help <topic>):
+========================================
+EOF  all  create  destroy  help  quit  show  update
+```    
 ```
 (hbnb) create BaseModel
+7fa29982-fe32-4dcc-aca5-35a4a249a517
 ```
 ```
-(hbnb) create BaseModel
-3aa5babc-efb6-4041-bfe9-3cc9727588f8
-(hbnb)                   
+(hbnb) all
+["[BaseModel] (7fa29982-fe32-4dcc-aca5-35a4a249a517) {'id': '7fa29982-fe32-4dcc-aca5-35a4a249a517',
+ 'created_at': datetime.datetime(2024, 2, 11, 0, 37, 56, 34761),
+ 'updated_at': datetime.datetime(2024, 2, 11, 0, 37, 56, 35762)}"]
 ```
-###### Example 1: Show an object
-Usage: show <class_name> <_id>
-
 ```
-(hbnb) show BaseModel 3aa5babc-efb6-4041-bfe9-3cc9727588f8
-[BaseModel] (3aa5babc-efb6-4041-bfe9-3cc9727588f8) {'id': '3aa5babc-efb6-4041-bfe9-3cc9727588f8', 'created_at': datetime.datetime(2020, 2, 18, 14, 21, 12, 96959), 
-'updated_at': datetime.datetime(2020, 2, 18, 14, 21, 12, 96971)}
-(hbnb)  
+(hbnb) show BaseModel 7fa29982-fe32-4dcc-aca5-35a4a249a517
+[BaseModel] (7fa29982-fe32-4dcc-aca5-35a4a249a517) {
+'id': '7fa29982-fe32-4dcc-aca5-35a4a249a517', 
+'created_at': datetime.datetime(2024, 2, 11, 0, 37, 56, 34761), 
+'updated_at': datetime.datetime(2024, 2, 11, 0, 37, 56, 35762)}
 ```
-###### Example 2: Destroy an object
-Usage: destroy <class_name> <_id>
 ```
-(hbnb) destroy BaseModel 3aa5babc-efb6-4041-bfe9-3cc9727588f8
-(hbnb) show BaseModel 3aa5babc-efb6-4041-bfe9-3cc9727588f8
+(hbnb) update BaseModel 7fa29982-fe32-4dcc-aca5-35a4a249a517 first_name "jhin"
+(hbnb) show BaseModel 7fa29982-fe32-4dcc-aca5-35a4a249a517
+[BaseModel] (7fa29982-fe32-4dcc-aca5-35a4a249a517) {
+ 'id': '7fa29982-fe32-4dcc-aca5-35a4a249a517',
+ 'created_at': datetime.datetime(2024, 2, 11, 0, 37, 56, 34761),
+ 'updated_at': datetime.datetime(2024, 2, 11, 0, 42, 9, 309604), 
+ 'first_name': 'jhin'}
+```
+```
+(hbnb) destroy BaseModel 7fa29982-fe32-4dcc-aca5-35a4a249a517
+(hbnb) show BaseModel 7fa29982-fe32-4dcc-aca5-35a4a249a517
 ** no instance found **
-(hbnb)   
 ```
-###### Example 3: Update an object
-Usage: update <class_name> <_id>
 ```
-(hbnb) update BaseModel b405fc64-9724-498f-b405-e4071c3d857f first_name "person"
-(hbnb) show BaseModel b405fc64-9724-498f-b405-e4071c3d857f
-[BaseModel] (b405fc64-9724-498f-b405-e4071c3d857f) {'id': 'b405fc64-9724-498f-b405-e4071c3d857f', 'created_at': datetime.datetime(2020, 2, 18, 14, 33, 45, 729889), 
-'updated_at': datetime.datetime(2020, 2, 18, 14, 33, 45, 729907), 'first_name': 'person'}
-(hbnb)
+(hbnb) count BaseModel
+(hbnh) 1
 ```
-<h3>Alternative Syntax</h3>
-
-###### Example 0: Show all User objects
-Usage: <class_name>.all()
 ```
-(hbnb) User.all()
-["[User] (99f45908-1d17-46d1-9dd2-b7571128115b) {'updated_at': datetime.datetime(2020, 2, 19, 21, 47, 34, 92071), 'id': '99f45908-1d17-46d1-9dd2-b7571128115b', 'created_at': datetime.datetime(2020, 2, 19, 21, 47, 34, 92056)}", "[User] (98bea5de-9cb0-4d78-8a9d-c4de03521c30) {'updated_at': datetime.datetime(2020, 2, 19, 21, 47, 29, 134362), 'id': '98bea5de-9cb0-4d78-8a9d-c4de03521c30', 'created_at': datetime.datetime(2020, 2, 19, 21, 47, 29, 134343)}"]
+(hbnb) quit {you closed the project}
+(hbnh) EOF {you closed the project}
 ```
-
-###### Example 1: Destroy a User
-Usage: <class_name>.destroy(<_id>)
-```
-(hbnb) User.destroy("99f45908-1d17-46d1-9dd2-b7571128115b")
-(hbnb)
-(hbnb) User.all()
-(hbnb) ["[User] (98bea5de-9cb0-4d78-8a9d-c4de03521c30) {'updated_at': datetime.datetime(2020, 2, 19, 21, 47, 29, 134362), 'id': '98bea5de-9cb0-4d78-8a9d-c4de03521c30', 'created_at': datetime.datetime(2020, 2, 19, 21, 47, 29, 134343)}"]
-```
-###### Example 2: Update User (by attribute)
-Usage: <class_name>.update(<_id>, <attribute_name>, <attribute_value>)
-```
-(hbnb) User.update("98bea5de-9cb0-4d78-8a9d-c4de03521c30", name "Todd the Toad")
-(hbnb)
-(hbnb) User.all()
-(hbnb) ["[User] (98bea5de-9cb0-4d78-8a9d-c4de03521c30) {'updated_at': datetime.datetime(2020, 2, 19, 21, 47, 29, 134362), 'id': '98bea5de-9cb0-4d78-8a9d-c4de03521c30', 'name': 'Todd the Toad', 'created_at': datetime.datetime(2020, 2, 19, 21, 47, 29, 134343)}"]
-```
-###### Example 3: Update User (by dictionary)
-Usage: <class_name>.update(<_id>, <dictionary>)
-```
-(hbnb) User.update("98bea5de-9cb0-4d78-8a9d-c4de03521c30", {'name': 'Fred the Frog', 'age': 9})
-(hbnb)
-(hbnb) User.all()
-(hbnb) ["[User] (98bea5de-9cb0-4d78-8a9d-c4de03521c30) {'updated_at': datetime.datetime(2020, 2, 19, 21, 47, 29, 134362), 'name': 'Fred the Frog', 'age': 9, 'id': '98bea5de-9cb0-4d78-8a9d-c4de03521c30', 'created_at': datetime.datetime(2020, 2, 19, 21, 47, 29, 134343)}"]
-```
-<br>
