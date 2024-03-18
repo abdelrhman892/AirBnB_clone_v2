@@ -52,7 +52,7 @@ This project is a Command Line Interface (CLI) for managing Airbnb listings.
 | ```destroy``` | ```destroy <class> <ID>``` Deletes an objects                                                                                              |
 | ```all```     | ```all <class>``` Prints all string representations of all objects or Prints all string representations of all objects of a specific class |
 | ```update```  | ```update <class> <id> <attribute name> "<attribute value>"``` Updates an object with a certain attribute (new or existing)                |
-| ```count```   | ```Return number of object instances by class```
+| ```count```   | ```count <class_name>``` Return number of object instances by class
 
 ## examples 
     
