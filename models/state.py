@@ -6,6 +6,9 @@ from models.base_model import BaseModel, Base
 
 
 class State(BaseModel, Base):
-    # State class
+    """This is the class for State
+    Attributes:
+        name: input name
+    """
     __tablename__ = "states"
     name = Column(String(128), nullable=False)
