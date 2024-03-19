@@ -5,6 +5,8 @@ import sys
 import re
 import os
 import uuid
+import shlex
+import json
 from models.base_model import BaseModel
 from models.__init__ import storage
 from models.user import User
@@ -33,6 +35,10 @@ class HBNBCommand(cmd.Cmd):
             'max_guest': int, 'price_by_night': int,
             'latitude': float, 'longitude': float
             }
+
+    def __init__(self):
+        super().__init__()
+        self.__objects = storage.all()
 
     def preloop(self):
         """Prints if isatty is false"""
@@ -237,26 +243,23 @@ class HBNBCommand(cmd.Cmd):
         print("Destroys an individual instance of a class")
         print("[Usage]: destroy <className> <objectId>\n")
 
-    def do_all(self, args):
+    def do_all(self, cls=None):
         """ Shows all objects, or all objects of a class"""
         # Done with some more fixing
-        
-        if args:
-            class_name = args.split()[0]  # Extract class name from args
-
-            if class_name not in HBNBCommand.classes:
-                print("** class doesn't exist **")
-                return
-
-            # Retrieve objects of specified class
-            objects = storage.all(class_name).values()
-            print_list = [str(obj) for obj in objects]
+        dic = {}
+        if cls:
+            if isinstance(cls, str):
+                dictionary = self.__objects
+                for key in dictionary:
+                    partition = key.replace('.', ' ')
+                    partition = shlex.split(partition)
+                    if partition[0] == cls:
+                        dic[key] = self.__objects[key]
+                return dic
+            else:
+                return {k: v for k, v in self.__objects.items() if isinstance(v, cls)}
         else:
-            # Retrieve all objects from database
-            objects = storage.all().values()
-            print_list = [str(obj) for obj in objects]
-
-        print(print_list)
+            return self.__objects
 
     def help_all(self):
         """ Help information for the all command """
