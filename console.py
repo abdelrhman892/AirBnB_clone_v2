@@ -14,7 +14,7 @@ from models.review import Review
 
 
 class HBNBCommand(cmd.Cmd):
-    """Defines the HolbertonBnB command interpreter."""
+    """Defines the HBnB command interpreter."""
 
     prompt = "(hbnb) "
     __classes = {
@@ -25,7 +25,7 @@ class HBNBCommand(cmd.Cmd):
             "Amenity",
             "Place",
             "Review"
-            }
+    }
 
     def emptyline(self):
         """Ignore empty spaces."""
@@ -73,13 +73,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
 
     def do_show(self, line): 
-        """Prints the string representation of an instance
-        Exceptions:
-        SyntaxError: when there is no args given
-        NameError: when there is no object taht has the name
-        IndexError: when there is no id given
-        KeyError: when there is no valid id given
-        """
+        # Prints the string representation of an instance
         try:
             if not line:
                 raise SyntaxError()
@@ -88,10 +82,10 @@ class HBNBCommand(cmd.Cmd):
                 raise NameError()
             if len(myList) < 2:
                 raise IndexError()
-            objects = storage.all()
+            obj = storage.all()
             key = myList[0] + '.' + myList[1]
-            if key in objects:
-                print(objects[key])
+            if key in obj:
+                print(obj[key])
             else:
                 raise KeyError()
         except SyntaxError:
@@ -104,13 +98,7 @@ class HBNBCommand(cmd.Cmd):
             print("** no instance found **")
 
     def do_destroy(self, line):
-        """Deletes an instance based on the class name and id
-        Exceptions:
-        SyntaxError: when there is no args given
-        NameError: when there is no object taht has the name
-        IndexError: when there is no id given
-        KeyError: when there is no valid id given
-        """
+        # Deletes an instance based on the class name and id
         try:
             if not line:
                 raise SyntaxError()
@@ -119,10 +107,10 @@ class HBNBCommand(cmd.Cmd):
                 raise NameError()
             if len(myList) < 2:
                 raise IndexError()
-            objects = storage.all()
+            obj = storage.all()
             key = myList[0] + '.' + myList[1]
-            if key in objects:
-                del objects[key]
+            if key in obj:
+                del obj[key]
                 storage.save()
             else:
                 raise KeyError()
@@ -136,9 +124,7 @@ class HBNBCommand(cmd.Cmd):
             print("** no instance found **")
 
     def do_all(self, line):
-        """Usage: all or all <class> or <class>.all()
-        Display string representations of all instances of a given class.
-        If no class is specified, displays all instantiated objects."""
+        # Usage: all or all <class> or <class>.all()
         if not line:
             alof = storage.all()
             print([alof[k].__str__() for k in alof])
@@ -149,21 +135,13 @@ class HBNBCommand(cmd.Cmd):
                 raise NameError()
 
             alof = storage.all(eval(args[0]))
-            print([o[k].__str__() for k in o])
+            print([alof[k].__str__() for k in alof])
 
         except NameError:
             print("** class doesn't exist **")
 
     def do_update(self, line):
-        """Updates an instanceby adding or updating attribute
-        Exceptions:
-        SyntaxError: when there is no args given
-        NameError: when there is no object taht has the name
-        IndexError: when there is no id given
-        KeyError: when there is no valid id given
-        AttributeError: when there is no attribute given
-        ValueError: when there is no value given
-        """
+        # Updates an instanceby adding or updating attribute
         try:
             if not line:
                 raise SyntaxError()
@@ -172,32 +150,32 @@ class HBNBCommand(cmd.Cmd):
                 raise NameError()
             if len(myList) < 2:
                 raise IndexError()
-            objects = storage.all()
+            obj = storage.all()
             key = myList[0] + '.' + myList[1]
-            if key not in objects:
+            if key not in obj:
                 raise KeyError()
             if len(myList) < 3:
                 raise AttributeError()
             if len(myList) < 4:
                 raise ValueError()
-            v = objects[key]
+            val = obj[key]
             try:
-                v.__dict__[myList[2]] = eval(myList[3])
+                val.__dict__[myList[2]] = eval(myList[3])
             except Exception:
-                v.__dict__[myList[2]] = myList[3]
-                v.save()
-            except SyntaxError:
-                print("** class name missing **")
-            except NameError:
-                print("** class doesn't exist **")
-            except IndexError:
-                print("** instance id missing **")
-            except KeyError:
-                print("** no instance found **")
-            except AttributeError:
-                print("** attribute name missing **")
-            except ValueError:
-                print("** value missing **")
+                val.__dict__[myList[2]] = myList[3]
+                val.save()
+        except SyntaxError:
+            print("** class name missing **")
+        except NameError:
+            print("** class doesn't exist **")
+        except IndexError:
+            print("** instance id missing **")
+        except KeyError:
+            print("** no instance found **")
+        except AttributeError:
+            print("** attribute name missing **")
+        except ValueError:
+            print("** value missing **")
 
     def count(self, line):
         # count the number of instances of a class
@@ -206,8 +184,8 @@ class HBNBCommand(cmd.Cmd):
             myList = split(line, " ")
             if myList[0] not in self.__classes:
                 raise NameError()
-            objects = storage.all()
-            for key in objects:
+            obj = storage.all()
+            for key in obj:
                 name = key.split('.')
                 if name[0] == myList[0]:
                     counter += 1
@@ -216,18 +194,18 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
 
     def strip_clean(self, args):
-        # strips the argument and return a string                                                     """
+        # strips the argument and return a string
         new_list = []
         new_list.append(args[0])
         try:
-            my_dict = eval(
+            myDict = eval(
                     args[1][args[1].find('{'):args[1].find('}')+1])
         except Exception:
-            my_dict = None
-        if isinstance(my_dict, dict):
+            myDict = None
+        if isinstance(myDict, dict):
             new_str = args[1][args[1].find('(')+1:args[1].find(')')]
             new_list.append(((new_str.split(", "))[0]).strip('"'))
-            new_list.append(my_dict)
+            new_list.append(myDict)
             return new_list
         new_str = args[1][args[1].find('(')+1:args[1].find(')')]
         new_list.append(" ".join(new_str.split(", ")))
