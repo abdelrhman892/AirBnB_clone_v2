@@ -41,7 +41,7 @@ class HBNBCommand(cmd.Cmd):
         return True
 
     def do_create(self, line):
-        # Create a new class instance with given keys/values and print its id.
+        """Create a new class instance with given keys/values and print its id."""
         try:
             if not line:
                 raise SyntaxError()
@@ -73,7 +73,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
 
     def do_show(self, line): 
-        # Prints the string representation of an instance
+        """Prints the string representation of an instance"""
         try:
             if not line:
                 raise SyntaxError()
@@ -98,7 +98,7 @@ class HBNBCommand(cmd.Cmd):
             print("** no instance found **")
 
     def do_destroy(self, line):
-        # Deletes an instance based on the class name and id
+        """Deletes an instance based on the class name and id"""
         try:
             if not line:
                 raise SyntaxError()
@@ -124,7 +124,7 @@ class HBNBCommand(cmd.Cmd):
             print("** no instance found **")
 
     def do_all(self, line):
-        # Usage: all or all <class> or <class>.all()
+        """Usage: all or all <class> or <class>.all()"""
         if not line:
             alof = storage.all()
             print([alof[k].__str__() for k in alof])
@@ -141,7 +141,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
 
     def do_update(self, line):
-        # Updates an instanceby adding or updating attribute
+        """Updates an instanceby adding or updating attribute"""
         try:
             if not line:
                 raise SyntaxError()
@@ -178,7 +178,7 @@ class HBNBCommand(cmd.Cmd):
             print("** value missing **")
 
     def count(self, line):
-        # count the number of instances of a class
+        """count the number of instances of a class"""
         counter = 0
         try:
             myList = split(line, " ")
@@ -194,7 +194,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
 
     def strip_clean(self, args):
-        # strips the argument and return a string
+        """strips the argument and return a string"""
         new_list = []
         new_list.append(args[0])
         try:
