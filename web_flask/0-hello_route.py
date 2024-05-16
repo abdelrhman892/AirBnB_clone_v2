@@ -10,6 +10,13 @@ def hello_hbnb():
     """ Prints a Message when / is called """
     return 'Hello HBNB!'
 
+@app.route('/airbnb-onepage/', strict_slashes=False)
+def hello():
+    """
+    Return: a string "Hello HBNB!" to greet HBNB
+    """
+    return "Hello HBNB!"
+
 
 if __name__ == "__main__":
     """ Main Function """
